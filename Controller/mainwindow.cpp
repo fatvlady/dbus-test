@@ -18,6 +18,8 @@ void MainWindow::timerEvent(QTimerEvent* event)
     {
         killTimer(event->timerId());
         ui->label->setText("Connected");
+        ui->startButton->setEnabled(true);
+        ui->stopButton->setEnabled(false);
         stopAnimate();
     }
     else
@@ -26,6 +28,12 @@ void MainWindow::timerEvent(QTimerEvent* event)
 
 void MainWindow::startAnimate()
 {
+    if (!manager->isValid())
+    {
+        ui->startButton->setEnabled(false);
+        startTimer(1000);
+        return;
+    }
     manager->start();
     ui->startButton->setEnabled(false);
     ui->stopButton->setEnabled(true);
@@ -33,6 +41,12 @@ void MainWindow::startAnimate()
 
 void MainWindow::stopAnimate()
 {
+    if (!manager->isValid())
+    {
+        ui->stopButton->setEnabled(false);
+        startTimer(1000);
+        return;
+    }
     manager->stop();
     ui->startButton->setEnabled(true);
     ui->stopButton->setEnabled(false);

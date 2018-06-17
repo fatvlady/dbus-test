@@ -10,7 +10,8 @@ class Manager : public QObject
     Q_OBJECT
 public:
     Manager(QString rootDir);
-    void timerEvent(QTimerEvent*);
+    void timerEvent(QTimerEvent*) override;
+
 private: // METHODS
 
 public Q_SLOTS:
@@ -22,7 +23,7 @@ private: // MEMBERS
     org::fatvlady::Test::ArrowInterface *arrow;
 
     bool running_{};
-    int counter{};
+    int counter_{};
     QDir rootDir_;
     QProcess plotter;
     QProcess controller;

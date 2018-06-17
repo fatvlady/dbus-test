@@ -15,10 +15,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     QDir rootDir = a.applicationDirPath();
-    if (rootDir.cd(".."))
-    {
-        std::cout << "Application located." << std::endl;
-    }
+    rootDir.cdUp();
     Manager manager(rootDir.path());
 
     QObject::connect(&a, SIGNAL(aboutToQuit()), &manager, SLOT(terminate()));

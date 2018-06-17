@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <thread>
 
 #include "manager.h"
@@ -18,8 +19,14 @@ Manager::Manager(QString rootDir) : rootDir_(rootDir)
                            QDBusConnection::sessionBus(), this);
     QDBusConnection connection = QDBusConnection::sessionBus();
     new ManagerInterfaceAdaptor(this);
-    connection.registerObject("/Manager", this);
-    connection.registerService("org.fatvlady.Test.Manager");
+    if (!connection.registerService("org.fatvlady.Test.Manager"))
+    {
+        throw std::runtime_error("Fatal: org.fatvlady.Test.Manager service is held by another process.");
+    }
+    if (!connection.registerObject("/Manager", this))
+    {
+        throw std::runtime_error("Fatal: /Manager object is held by another process.");
+    }
 
     plotter.start(rootDir_.absoluteFilePath("Plotter/Plotter" EXTENSION));
     controller.start(rootDir_.absoluteFilePath("Controller/Controller" EXTENSION));
@@ -30,6 +37,14 @@ Manager::Manager(QString rootDir) : rootDir_(rootDir)
         std::cout << "Fatal: Failed to locate mandatory applications." << std::endl;
         terminate();
         std::abort();
+    }
+
+    std::ifstream file("value.txt", std::ios::binary);
+    std::istream::sentry s(file);
+    if (s)
+    {
+        file >> counter_;
+        std::cout << "Resuming from value X = " << counter_ * 0.1 << std::endl;
     }
 
     startTimer(500);
@@ -50,12 +65,12 @@ void Manager::timerEvent(QTimerEvent* event)
     Q_UNUSED(event);
     if(!arrow->isValid())
     {
-        std::cout << "Waiting for a process to start and connect to dbus." << std::endl;
+        std::cout << "Waiting for a Plotter process to start and connect to dbus." << std::endl;
     }
     else if (running_)
     {
-        double x = counter * 0.1;
-        ++counter;
+        double x = counter_ * 0.1;
+        ++counter_;
         arrow->move(x, std::sin(x));
         std::cout << "X = " << x << " Y = " << std::sin(x) << std::endl;
     }
@@ -68,4 +83,8 @@ void Manager::terminate()
     controller.terminate();
     plotter.waitForFinished();
     controller.waitForFinished();
+    std::ofstream file("value.txt", std::ios::binary | std::ios::out);
+    file << counter_ << std::endl; // flush
 }
+
+

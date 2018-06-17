@@ -25,8 +25,15 @@ int main(int argc, char *argv[])
 
     new ArrowInterfaceAdaptor(arrow);
     QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject("/Arrow", arrow);
-    connection.registerService("org.fatvlady.Test");
+
+    if (!connection.registerService("org.fatvlady.Test"))
+    {
+        throw std::runtime_error("Fatal: org.fatvlady.Test service is held by another process.");
+    }
+    if (!connection.registerObject("/Arrow", arrow))
+    {
+        throw std::runtime_error("Fatal: /Arrow object is held by another process.");
+    }
 
     return a.exec();
 }
