@@ -1,7 +1,15 @@
 #include <QCoreApplication>
-#include <QDir>
+#include <QObject>
 #include <iostream>
 #include "manager.h"
+
+void signalHandler(int signal)
+{
+    if (signal == SIGINT)
+    {
+        qApp->quit();
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +21,7 @@ int main(int argc, char *argv[])
     }
     Manager manager(rootDir.path());
 
-    manager.run();
+    QObject::connect(&a, SIGNAL(aboutToQuit()), &manager, SLOT(terminate()));
+    signal(SIGINT, signalHandler);
     return a.exec();
 }

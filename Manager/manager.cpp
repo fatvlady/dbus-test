@@ -1,27 +1,35 @@
 #include <iostream>
 #include <thread>
+#include <fstream>
 
 #include "manager.h"
 
 Manager::Manager(QString rootDir) : rootDir_(rootDir)
 {
-    arrow = new ArrowInterfaceAdaptor("org.fatvlady.Test", "/Arrow",
+    arrow = new org::fatvlady::Test::ArrowInterface("org.fatvlady.Test", "/Arrow",
                            QDBusConnection::sessionBus(), this);
+    //plotter.start(rootDir_.absoluteFilePath("Plotter/Plotter.app"));
+    startTimer(1000);
 }
 
-void Manager::run()
+void Manager::timerEvent(QTimerEvent* event)
 {
-    plotter.start(rootDir_.absoluteFilePath("Plotter/Plotter.app"));
-
-    for(int i = 0; i < 40; ++i)
+    Q_UNUSED(event);
+    if(!arrow->isValid())
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        tick();
+        std::cout << "Waiting for a process to start and connect to dbus." << std::endl;
     }
-    plotter.terminate();
+    else
+    {
+        double x = counter * 0.1;
+        ++counter;
+        arrow->move(x, std::sin(x));
+        std::cout << "X = " << x << " Y = " << std::sin(x) << std::endl;
+    }
 }
 
-void Manager::tick()
+void Manager::terminate()
 {
-    std::cout << "tick" << std::endl;
+    std::cout << "Terminating child processes..." << std::endl;
+    plotter.terminate();
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-<node name="/com/fatvlady/test">
+<node>
     <interface name="org.fatvlady.Test.ArrowInterface">
         <method name="move">
             <arg name="x" type="d"/>

@@ -15,7 +15,7 @@ QRectF Arrow::boundingRect() const
 
 void Arrow::move(double x, double y)
 {
-    setTransform(QTransform::fromTranslate(x-old_x, y-old_y), true);
+    setTransform(QTransform::fromTranslate((x-old_x) * 100, (y-old_y) * 100), true);
     old_x = x;
     old_y = y;
 }

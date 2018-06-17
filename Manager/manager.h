@@ -3,21 +3,22 @@
 
 #include <QDir>
 #include <QProcess>
-#include "arrow_adaptor.h"
+#include "arrow_interface.h"
 
-class Manager
+class Manager : public QObject
 {
+    Q_OBJECT
 public:
     Manager(QString rootDir);
-    void run();
+    void timerEvent(QTimerEvent*);
 private: // METHODS
-    void tick();
 
-signals:
-
+public Q_SLOTS:
+    void terminate();
 
 private: // MEMBERS
-    ArrowInterfaceAdaptor *arrow;
+    org::fatvlady::Test::ArrowInterface *arrow;
+    int counter{};
     QDir rootDir_;
     QProcess plotter;
     QProcess controller;
