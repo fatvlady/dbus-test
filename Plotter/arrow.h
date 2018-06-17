@@ -16,6 +16,9 @@ public Q_SLOTS:
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) override;
+private:
+    double old_x{};
+    double old_y{};
 };
 
 #endif // ARROW_H

@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QProcess>
+#include "arrow_adaptor.h"
 
 class Manager
 {
@@ -16,6 +17,7 @@ signals:
 
 
 private: // MEMBERS
+    ArrowInterfaceAdaptor *arrow;
     QDir rootDir_;
     QProcess plotter;
     QProcess controller;

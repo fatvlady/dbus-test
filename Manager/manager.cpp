@@ -5,6 +5,8 @@
 
 Manager::Manager(QString rootDir) : rootDir_(rootDir)
 {
+    arrow = new ArrowInterfaceAdaptor("org.fatvlady.Test", "/Arrow",
+                           QDBusConnection::sessionBus(), this);
 }
 
 void Manager::run()
