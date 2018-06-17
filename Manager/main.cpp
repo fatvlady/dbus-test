@@ -5,7 +5,7 @@
 
 void signalHandler(int signal)
 {
-    if (signal == SIGINT)
+    if (signal == SIGINT || signal == SIGTERM)
     {
         qApp->quit();
     }
@@ -23,5 +23,6 @@ int main(int argc, char *argv[])
 
     QObject::connect(&a, SIGNAL(aboutToQuit()), &manager, SLOT(terminate()));
     signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
     return a.exec();
 }

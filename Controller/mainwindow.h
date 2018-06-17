@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "manager_interface.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -13,10 +15,15 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void timerEvent(QTimerEvent*);
     ~MainWindow();
 
-private:
+public Q_SLOTS:
+    void startAnimate();
+    void stopAnimate();
 
+private:
+    org::fatvlady::Test::ManagerInterface *manager;
     Ui::MainWindow *ui;
 };
 

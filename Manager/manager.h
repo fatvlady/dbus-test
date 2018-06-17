@@ -15,9 +15,13 @@ private: // METHODS
 
 public Q_SLOTS:
     void terminate();
+    void start();
+    void stop();
 
 private: // MEMBERS
     org::fatvlady::Test::ArrowInterface *arrow;
+
+    bool running_{};
     int counter{};
     QDir rootDir_;
     QProcess plotter;
